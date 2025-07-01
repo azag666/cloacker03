@@ -6,7 +6,6 @@
   <title>Redirecionando...</title>
 
   <script>
-    // Detecta bots (Facebook, Telegram, WhatsApp etc.)
     const botKeywords = [
       'facebookexternalhit', 'facebot', 'twitterbot', 'linkedinbot',
       'slackbot', 'telegrambot', 'whatsapp', 'discordbot',
@@ -19,40 +18,38 @@
       return botKeywords.some(bot => ua.includes(bot));
     }
 
-    // Verifica se o usuário é real (mobile + touch)
     function isRealUser() {
-      return /android|iphone|ipad|ipod/i.test(navigator.userAgent) && 
+      return /android|iphone|ipad|ipod/i.test(navigator.userAgent) &&
              ('ontouchstart' in window || navigator.maxTouchPoints > 0);
     }
 
-    // Pega o parâmetro fbclid da URL
     function getFbclid() {
       const params = new URLSearchParams(window.location.search);
       return params.get('fbclid');
     }
 
-    // Constrói o FBC no formato aceito pela Meta
     function generateFbc(fbclid) {
       if (!fbclid) return 'null';
       const timestamp = Date.now();
       return `fb.1.${timestamp}.${fbclid}`;
     }
 
-    // Redireciona para o Telegram ou fallback
     (function redirectToTelegram() {
       const isUserBot = isBot();
       const isUserReal = isRealUser();
       const fbclid = getFbclid();
       const fbc = generateFbc(fbclid);
       const telegramUsername = 'joycejacobbot';
-      const payload = `w41510475--${encodeURIComponent(fbc)}`;
 
       if (isUserBot || !isUserReal) {
         window.location.href = 'https://fernandatamires.netlify.app/';
         return;
       }
 
-      const telegramLink = `https://t.me/${telegramUsername}?start=${payload}`;
+      // 🔥 Aqui está a mágica: mantém o gatilho, mas envia o fbc junto com hífen
+      const startParam = `w41510475--${encodeURIComponent(fbc)}`;
+      const telegramLink = `https://t.me/${telegramUsername}?start=${startParam}`;
+
       window.location.replace(telegramLink);
     })();
   </script>
