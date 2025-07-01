@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Redirecionando...</title>
+
   <script>
+    // Detecta bots (Facebook, Telegram, WhatsApp etc.)
     const botKeywords = [
       'facebookexternalhit', 'facebot', 'twitterbot', 'linkedinbot',
       'slackbot', 'telegrambot', 'whatsapp', 'discordbot',
@@ -17,41 +19,41 @@
       return botKeywords.some(bot => ua.includes(bot));
     }
 
-    function isMobile() {
-      return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    // Verifica se o usuário é real (mobile + touch)
+    function isRealUser() {
+      return /android|iphone|ipad|ipod/i.test(navigator.userAgent) && 
+             ('ontouchstart' in window || navigator.maxTouchPoints > 0);
     }
 
-    function isTouchDevice() {
-      return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    }
-
+    // Pega o parâmetro fbclid da URL
     function getFbclid() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('fbclid');
+      const params = new URLSearchParams(window.location.search);
+      return params.get('fbclid');
     }
 
-    function buildFbc(fbclid) {
+    // Constrói o FBC no formato aceito pela Meta
+    function generateFbc(fbclid) {
+      if (!fbclid) return 'null';
       const timestamp = Date.now();
       return `fb.1.${timestamp}.${fbclid}`;
     }
 
-    // Execução imediata assim que o script é lido
-    (function redirect() {
-      const isBotAccess = isBot();
-      const isRealMobile = isMobile() && isTouchDevice();
+    // Redireciona para o Telegram ou fallback
+    (function redirectToTelegram() {
+      const isUserBot = isBot();
+      const isUserReal = isRealUser();
+      const fbclid = getFbclid();
+      const fbc = generateFbc(fbclid);
       const telegramUsername = 'joycejacobbot';
+      const payload = `w41510475--${encodeURIComponent(fbc)}`;
 
-      if (isBotAccess || !isRealMobile) {
-        window.location.replace('https://fernandatamires.netlify.app/');
+      if (isUserBot || !isUserReal) {
+        window.location.href = 'https://fernandatamires.netlify.app/';
         return;
       }
 
-      const fbclid = getFbclid();
-      const fbc = fbclid ? buildFbc(fbclid) : 'null';
-      const url = `https://t.me/${telegramUsername}?start=w41510475--${encodeURIComponent(fbc)}`;
-
-      // Redireciona o mais rápido possível
-      window.location.replace(url);
+      const telegramLink = `https://t.me/${telegramUsername}?start=${payload}`;
+      window.location.replace(telegramLink);
     })();
   </script>
 </head>
