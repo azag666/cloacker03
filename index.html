@@ -86,19 +86,17 @@
       return urlParams.get('fbclid');
     }
 
-    function buildFbc(fbclid) {
-      const timestamp = Date.now();
-      return `fb.1.${timestamp}.${fbclid}`;
-    }
-
+    // O event listener abaixo foi alterado
     window.addEventListener('DOMContentLoaded', () => {
       const fbclid = getFbclid();
       const telegramUsername = 'joycejacobbot';
       const btn = document.getElementById('telegramButton');
 
+      // Verifica se o fbclid existe e o botão também
       if (fbclid && btn) {
-        const fbc = buildFbc(fbclid);
-        btn.href = `https://t.me/${telegramUsername}?start=w41510475_fbclid_${encodeURIComponent(fbc)}`;
+        // CORREÇÃO: Constrói o link usando o fbclid original, sem transformá-lo.
+        // O prefixo 'w41510475_' provavelmente é um gatilho no ManyChat, então o mantemos.
+        btn.href = `https://t.me/${telegramUsername}?start=w41510475_${encodeURIComponent(fbclid)}`;
       }
     });
   </script>
