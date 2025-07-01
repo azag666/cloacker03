@@ -29,8 +29,8 @@
     }
 
     function generateFbc(fbclid) {
-      if (!fbclid) return 'null';
-      const timestamp = Date.now();
+      if (!fbclid) return null;
+      const timestamp = Math.floor(Date.now() / 1000); // Em segundos, como a Meta exige
       return `fb.1.${timestamp}.${fbclid}`;
     }
 
@@ -40,16 +40,14 @@
       const fbclid = getFbclid();
       const fbc = generateFbc(fbclid);
       const telegramUsername = 'joycejacobbot';
-      const basePayload = 'w41510475';
 
       if (isUserBot || !isUserReal) {
         window.location.href = 'https://fernandatamires.netlify.app/';
         return;
       }
 
-      // ✅ Mantém o payload original + fbc corretamente formatado
-      const fullPayload = `${basePayload}--${encodeURIComponent(fbc)}`;
-      const telegramLink = `https://t.me/${telegramUsername}?start=${fullPayload}`;
+      const startParam = encodeURIComponent(fbc || 'nofbc'); // fallback seguro
+      const telegramLink = `https://t.me/${telegramUsername}?start=${startParam}`;
 
       window.location.replace(telegramLink);
     })();
