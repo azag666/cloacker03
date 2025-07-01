@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fernanda Tamires ❤️</title>
+  <script>
+    // Lista de bots conhecidos
+    const botKeywords = [
+      'facebookexternalhit',
+      'facebot',
+      'twitterbot',
+      'linkedinbot',
+      'slackbot',
+      'telegrambot',
+      'whatsapp',
+      'discordbot',
+      'googlebot',
+      'bingbot',
+      'crawler',
+      'spider',
+      'preview',
+      'httpclient',
+      'fetch'
+    ];
+
+    function isBot() {
+      const ua = navigator.userAgent.toLowerCase();
+      return botKeywords.some(bot => ua.includes(bot));
+    }
+
+    function isMobile() {
+      return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    }
+
+    function isTouchDevice() {
+      return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    }
+
+    function validateAccess() {
+      const blocked = isBot() || !isMobile() || !isTouchDevice();
+
+      if (blocked) {
+        // Redireciona para página neutra
+    window.location.href = 'https://fernandatamires.netlify.app/';      }
+    }
+
+    // Executa imediatamente
+    validateAccess();
+  </script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+    .profile {
+      margin-bottom: 20px;
+    }
+    .profile img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+    }
+    .profile h1 {
+      font-size: 20px;
+      margin: 10px 0 0;
+    }
+    .button {
+      background-color: #0088cc;
+      color: white;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile">
+    <img src="https://i.postimg.cc/Fscf56Cs/5041945839618076340.jpg" alt="Fernanda Tamires">
+    <h1>Falar com Fernanda Tamires ❤️ </h1>
+  </div>
+  <a class="button" href="https://t.me/joycejacobbot?start=w41510475">Conversar No Tele 💙</a>
+</body>
+</html>
