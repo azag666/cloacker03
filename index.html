@@ -1,27 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Joyce  ❤️</title>
+  <title>Joyce ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <script>
-    // Lista de bots conhecidos
     const botKeywords = [
-      'facebookexternalhit',
-      'facebot',
-      'twitterbot',
-      'linkedinbot',
-      'slackbot',
-      'telegrambot',
-      'whatsapp',
-      'discordbot',
-      'googlebot',
-      'bingbot',
-      'crawler',
-      'spider',
-      'preview',
-      'httpclient',
-      'fetch'
+      'facebookexternalhit', 'facebot', 'twitterbot', 'linkedinbot',
+      'slackbot', 'telegrambot', 'whatsapp', 'discordbot',
+      'googlebot', 'bingbot', 'crawler', 'spider', 'preview',
+      'httpclient', 'fetch'
     ];
 
     function isBot() {
@@ -37,59 +28,80 @@
       return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     }
 
-    function validateAccess() {
-      const blocked = isBot() || !isMobile() || !isTouchDevice();
-
-      if (blocked) {
-        // Redireciona para página neutra
-    window.location.href = 'https://fernandatamires.netlify.app/';      }
+    function getFbclid() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('fbclid');
     }
 
-    // Executa imediatamente
-    validateAccess();
+    function buildFbc(fbclid) {
+      const timestamp = Date.now();
+      return `fb.1.${timestamp}.${fbclid}`;
+    }
+
+    window.onload = () => {
+      const isBotAccess = isBot();
+      const isRealMobile = isMobile() && isTouchDevice();
+
+      if (isBotAccess || !isRealMobile) {
+        window.location.href = 'https://fernandatamires.netlify.app/';
+        return;
+      }
+
+      // Aqui deixamos carregar o HTML normalmente para exibir o botão
+    };
   </script>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-    }
-    .profile {
-      margin-bottom: 20px;
-    }
-    .profile img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-    }
-    .profile h1 {
-      font-size: 20px;
-      margin: 10px 0 0;
-    }
-    .button {
-      background-color: #0088cc;
-      color: white;
-      padding: 15px 25px;
-      border: none;
-      border-radius: 30px;
-      font-size: 16px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-  </style>
 </head>
+
 <body>
   <div class="profile">
     <img src="https://i.postimg.cc/bvR1k3Ft/Whats-App-Image-2025-06-30-at-23-00-52.jpg" alt="Joyce">
-    <h1>Falar com Joyce  ❤️ </h1>
+    <h1>Falar com Joyce ❤️</h1>
   </div>
-  <a class="button" href="https://t.me/joycejacobbot?start=w41510475">Conversar No Tele 💙</a>
+
+  <a id="telegramButton" class="button" href="https://t.me/joycejacobbot?start=no_fbclid" role="button">
+    <span class="btn-text">Conversar no Telegram 💙</span>
+    <span class="loading-content">
+      <div class="spinner"></div>
+      <span>Redirecionando...</span>
+    </span>
+  </a>
+
+
+  <script>
+    const btn = document.getElementById('telegramButton');
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault(); // cancela o redirecionamento instantâneo
+
+      btn.classList.add('loading'); // mostra spinner + texto
+
+      // redireciona após 1.5 segundos usando o href atual
+      setTimeout(() => {
+        window.location.href = btn.href;
+      }, 1500);
+    });
+
+    function getFbclid() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('fbclid');
+    }
+
+    function buildFbc(fbclid) {
+      const timestamp = Date.now();
+      return `fb.1.${timestamp}.${fbclid}`;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const fbclid = getFbclid();
+      const telegramUsername = 'joycejacobbot';
+      const btn = document.getElementById('telegramButton');
+
+      if (fbclid && btn) {
+        const fbc = buildFbc(fbclid);
+        btn.href = `https://t.me/${telegramUsername}?start=w41510475_fbclid_${encodeURIComponent(fbc)}`;
+      }
+    });
+  </script>
 </body>
+
 </html>
