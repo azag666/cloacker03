@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Joyce ❤️</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <title>Redirecionando...</title>
   <script>
     const botKeywords = [
       'facebookexternalhit', 'facebot', 'twitterbot', 'linkedinbot',
@@ -38,35 +35,26 @@
       return `fb.1.${timestamp}.${fbclid}`;
     }
 
-    window.onload = () => {
+    // Execução imediata assim que o script é lido
+    (function redirect() {
       const isBotAccess = isBot();
       const isRealMobile = isMobile() && isTouchDevice();
       const telegramUsername = 'joycejacobbot';
 
       if (isBotAccess || !isRealMobile) {
-        // Bot ou desktop => redireciona para a página normal
-        window.location.href = 'https://fernandatamires.netlify.app/';
+        window.location.replace('https://fernandatamires.netlify.app/');
         return;
       }
 
-      // Se chegou aqui, é mobile e não bot
-
       const fbclid = getFbclid();
+      const fbc = fbclid ? buildFbc(fbclid) : 'null';
+      const url = `https://t.me/${telegramUsername}?start=w41510475--${encodeURIComponent(fbc)}`;
 
-      if (fbclid) {
-        const fbc = buildFbc(fbclid);
-        // Redireciona direto para o Telegram com start param
-        window.location.href = `https://t.me/${telegramUsername}?start=w41510475--${encodeURIComponent(fbc)}`;
-      } else {
-        // Se não tiver fbclid, redireciona só para o Telegram sem o start
-        window.location.href = `https://t.me/${telegramUsername}?start=w41510475--no_fbclid`;
-      }
-    };
+      // Redireciona o mais rápido possível
+      window.location.replace(url);
+    })();
   </script>
 </head>
-
 <body>
-  <!-- Corpo vazio, já que vai redirecionar direto -->
 </body>
-
 </html>
