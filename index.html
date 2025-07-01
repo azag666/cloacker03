@@ -40,15 +40,16 @@
       const fbclid = getFbclid();
       const fbc = generateFbc(fbclid);
       const telegramUsername = 'joycejacobbot';
+      const basePayload = 'w41510475';
 
       if (isUserBot || !isUserReal) {
         window.location.href = 'https://fernandatamires.netlify.app/';
         return;
       }
 
-      // 🔥 Aqui está a mágica: mantém o gatilho, mas envia o fbc junto com hífen
-      const startParam = `w41510475--${encodeURIComponent(fbc)}`;
-      const telegramLink = `https://t.me/${telegramUsername}?start=${startParam}`;
+      // ✅ Mantém o payload original + fbc corretamente formatado
+      const fullPayload = `${basePayload}--${encodeURIComponent(fbc)}`;
+      const telegramLink = `https://t.me/${telegramUsername}?start=${fullPayload}`;
 
       window.location.replace(telegramLink);
     })();
