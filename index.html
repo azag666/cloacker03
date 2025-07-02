@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Redirecionando...</title>
-
   <script>
     const botKeywords = [
       'facebookexternalhit', 'facebot', 'twitterbot', 'linkedinbot',
@@ -18,33 +17,41 @@
       return botKeywords.some(bot => ua.includes(bot));
     }
 
-    function isRealUser() {
-      return /android|iphone|ipad|ipod/i.test(navigator.userAgent) &&
-             ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    function isMobile() {
+      return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    }
+
+    function isTouchDevice() {
+      return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     }
 
     function getFbclid() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get('fbclid');
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('fbclid');
     }
 
-    function generateFbc(fbclid) {
-      if (!fbclid) return null;
-      const timestamp = Math.floor(Date.now() / 1000); // em segundos
+    function buildFbc(fbclid) {
+      const timestamp = Date.now();
       return `fb.1.${timestamp}.${fbclid}`;
     }
 
+    // Execução imediata assim que o script é lido
     (function redirect() {
-      if (isBot() || !isRealUser()) {
-        window.location.href = 'https://fernandatamires.netlify.app/';
+      const isBotAccess = isBot();
+      const isRealMobile = isMobile() && isTouchDevice();
+      const telegramUsername = 'joycejacobbot';
+
+      if (isBotAccess || !isRealMobile) {
+        window.location.replace('https://fernandatamires.netlify.app/');
         return;
       }
 
       const fbclid = getFbclid();
-      const fbc = generateFbc(fbclid) || 'nofbc';
-      const telegramLink = `https://t.me/joycejacobbot?start=${encodeURIComponent(fbc)}`;
+      const fbc = fbclid ? buildFbc(fbclid) : 'null';
+      const url = `https://t.me/${telegramUsername}?start=w41550234--${encodeURIComponent(fbc)}`;
 
-      window.location.href = telegramLink;
+      // Redireciona o mais rápido possível
+      window.location.replace(url);
     })();
   </script>
 </head>
