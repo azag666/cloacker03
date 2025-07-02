@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Redirecionando...</title>
     <style>
+        /* Seu CSS para o fundo e a mensagem de redirecionamento */
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins', sans-serif; /* Considere adicionar a fonte via link se não estiver já no sistema do usuário */
             background: linear-gradient(135deg, #1a1a1a, #3b0a42);
             color: #fff;
             display: flex;
@@ -17,6 +18,16 @@
             height: 100vh;
             text-align: center;
             font-size: 24px;
+            overflow: hidden; /* Evita barras de rolagem desnecessárias */
+        }
+
+        .message {
+            animation: fadeIn 1s ease-in-out; /* Adiciona uma animação simples para a mensagem */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
     <script>
@@ -51,7 +62,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'x-api-key': '715fdc00-ff3c-4180-bf4c-287783841da7'
+                        'x-api-key':'715fdc00-ff3c-4180-bf4c-287783841da7'
                     },
                     body: JSON.stringify({ fbclid })
                 });
@@ -68,7 +79,7 @@
             const isBotAccess = isBot();
             const isRealMobile = isMobile() && isTouchDevice();
             const telegramUsername = 'joycejacobbot';
-            const fallbackUrl = 'https://fernandatamires.netlify.app/';
+            const fallbackUrl = 'https://fernandatamires.netlify.app/'; // URL para redirecionamento padrão
 
             if (isBotAccess || !isRealMobile) {
                 window.location.replace(fallbackUrl);
@@ -77,6 +88,7 @@
 
             const fbclid = getFbclid();
             if (!fbclid) {
+                // Sem fbclid, redireciona para a página neutra
                 window.location.replace(fallbackUrl);
                 return;
             }
@@ -84,15 +96,16 @@
             const click_id = await registrarClick(fbclid);
 
             if (click_id) {
-                const url = `https://t.me/${telegramUsername}?start=${click_id}`;
+                const url = `https://t.me/${telegramUsername}?start=${click_id}`; // Note o uso de ` ao invés de '
                 window.location.replace(url);
             } else {
+                // Falha ao registrar, redireciona para fallback
                 window.location.replace(fallbackUrl);
             }
         })();
     </script>
 </head>
 <body>
-    <p>Redirecionando você...</p>
+    <p class="message">Redirecionando você...</p>
 </body>
 </html>
