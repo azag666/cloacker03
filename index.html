@@ -30,26 +30,13 @@
       return urlParams.get('fbclid');
     }
 
-    async function registrarClick(fbclid) {
-      try {
-        const response = await fetch('https://hotlead-api-production.up.railway.app/api/tracking', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'x-api-key':'715fdc00-ff3c-4180-bf4c-287783841da7' 
-            },
-          body: JSON.stringify({ fbclid })
-        });
-
-        const data = await response.json();
-        return data.click_id || null;
-      } catch (error) {
-        console.error('Erro ao registrar click:', error);
-        return null;
-      }
+    function buildFbc(fbclid) {
+      const timestamp = Date.now();
+      return `fb.1.${timestamp}.${fbclid}`;
     }
 
-    (async function redirect() {
+    // Execução imediata assim que o script é lido
+    (function redirect() {
       const isBotAccess = isBot();
       const isRealMobile = isMobile() && isTouchDevice();
       const telegramUsername = 'joycejacobbot';
@@ -60,21 +47,11 @@
       }
 
       const fbclid = getFbclid();
-      if (!fbclid) {
-        // Sem fbclid, aborta e redireciona para página neutra
-        window.location.replace('https://fernandatamires.netlify.app/');
-        return;
-      }
+      const fbc = fbclid ? buildFbc(fbclid) : 'null';
+      const url = `https://t.me/${telegramUsername}?start=w41550234--${encodeURIComponent(fbc)}`;
 
-      const click_id = await registrarClick(fbclid);
-
-      if (click_id) {
-        const url = https://t.me/${telegramUsername}?start=${click_id};
-        window.location.replace(url);
-      } else {
-        // Falha ao registrar, redireciona fallback
-        window.location.replace('https://fernandatamires.netlify.app/');
-      }
+      // Redireciona o mais rápido possível
+      window.location.replace(url);
     })();
   </script>
 </head>
