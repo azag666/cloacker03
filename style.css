@@ -96,19 +96,19 @@ body {
     margin-right: 10px;
 }
 
-/* AnimaÃ§Ã£o de giro */
+/* Animação de giro */
 @keyframes spin {
     to {
         transform: rotate(360deg);
     }
 }
 
-/* Esconde o texto normal do botÃ£o quando estiver loading */
+/* Esconde o texto normal do botão quando estiver loading */
 .button.loading .btn-text {
     display: none;
 }
 
-/* Mostra o conteÃºdo de loading (spinner + texto) inicialmente escondido */
+/* Mostra o conteúdo de loading (spinner + texto) inicialmente escondido */
 .button .loading-content {
     display: none;
     align-items: center;
