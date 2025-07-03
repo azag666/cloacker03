@@ -1,111 +1,83 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Redirecionando...</title>
-    <style>
-        /* Seu CSS para o fundo e a mensagem de redirecionamento */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif; /* Considere adicionar a fonte via link se não estiver já no sistema do usuário */
-            background: linear-gradient(135deg, #1a1a1a, #3b0a42);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            font-size: 24px;
-            overflow: hidden; /* Evita barras de rolagem desnecessárias */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redirecionando...</title>
+  <script>
+    const botKeywords = [
+      'facebookexternalhit', 'facebot', 'twitterbot', 'linkedinbot',
+      'slackbot', 'telegrambot', 'whatsapp', 'discordbot',
+      'googlebot', 'bingbot', 'crawler', 'spider', 'preview',
+      'httpclient', 'fetch'
+    ];
 
-        .message {
-            animation: fadeIn 1s ease-in-out; /* Adiciona uma animação simples para a mensagem */
-        }
+    function isBot() {
+      const ua = navigator.userAgent.toLowerCase();
+      return botKeywords.some(bot => ua.includes(bot));
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
-    <script>
-        const botKeywords = [
-            'facebookexternalhit', 'facebot', 'twitterbot', 'linkedinbot',
-            'slackbot', 'telegrambot', 'whatsapp', 'discordbot',
-            'googlebot', 'bingbot', 'crawler', 'spider', 'preview',
-            'httpclient', 'fetch'
-        ];
+    function isMobile() {
+      return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    }
 
-        function isBot() {
-            const ua = navigator.userAgent.toLowerCase();
-            return botKeywords.some(bot => ua.includes(bot));
-        }
+    function isTouchDevice() {
+      return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    }
 
-        function isMobile() {
-            return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
-        }
+    function getFbclid() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('fbclid');
+    }
 
-        function isTouchDevice() {
-            return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        }
+    async function registrarClick(fbclid) {
+      try {
+        const response = await fetch('https://hotlead-api-production.up.railway.app/api/tracking', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'x-api-key':'715fdc00-ff3c-4180-bf4c-287783841da7' 
+            },
+          body: JSON.stringify({ fbclid })
+        });
 
-        function getFbclid() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('fbclid');
-        }
+        const data = await response.json();
+        return data.click_id || null;
+      } catch (error) {
+        console.error('Erro ao registrar click:', error);
+        return null;
+      }
+    }
 
-        async function registrarClick(fbclid) {
-            try {
-                const response = await fetch('https://hotlead-api-production.up.railway.app/api/tracking', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key':'715fdc00-ff3c-4180-bf4c-287783841da7'
-                    },
-                    body: JSON.stringify({ fbclid })
-                });
+    (async function redirect() {
+      const isBotAccess = isBot();
+      const isRealMobile = isMobile() && isTouchDevice();
+      const telegramUsername = 'joycejacobbot';
 
-                const data = await response.json();
-                return data.click_id || null;
-            } catch (error) {
-                console.error('Erro ao registrar click:', error);
-                return null;
-            }
-        }
+      if (isBotAccess || !isRealMobile) {
+        window.location.replace('https://fernandatamires.netlify.app/');
+        return;
+      }
 
-        (async function redirect() {
-            const isBotAccess = isBot();
-            const isRealMobile = isMobile() && isTouchDevice();
-            const telegramUsername = 'joycejacobbot';
-            const fallbackUrl = 'https://fernandatamires.netlify.app/'; // URL para redirecionamento padrão
+      const fbclid = getFbclid();
+      if (!fbclid) {
+        // Sem fbclid, aborta e redireciona para página neutra
+        window.location.replace('https://fernandatamires.netlify.app/');
+        return;
+      }
 
-            if (isBotAccess || !isRealMobile) {
-                window.location.replace(fallbackUrl);
-                return;
-            }
+      const click_id = await registrarClick(fbclid);
 
-            const fbclid = getFbclid();
-            if (!fbclid) {
-                // Sem fbclid, redireciona para a página neutra
-                window.location.replace(fallbackUrl);
-                return;
-            }
-
-            const click_id = await registrarClick(fbclid);
-
-            if (click_id) {
-                const url = `https://t.me/${telegramUsername}?start=${click_id}`; // Note o uso de ` ao invés de '
-                window.location.replace(url);
-            } else {
-                // Falha ao registrar, redireciona para fallback
-                window.location.replace(fallbackUrl);
-            }
-        })();
-    </script>
+      if (click_id) {
+        const url = `https://t.me/${telegramUsername}?start=${click_id}`;
+        window.location.replace(url);
+      } else {
+        // Falha ao registrar, redireciona fallback
+        window.location.replace('https://fernandatamires.netlify.app/');
+      }
+    })();
+  </script>
 </head>
 <body>
-    <p class="message">Redirecionando você...</p>
 </body>
 </html>
